@@ -47,7 +47,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { Item } from '@/types'
 import { MONTHS, WEEK_DAYS } from '@/constants'
-import { formatX2, compareMonth, compareDates, isSelected } from '@/helpers'
+import { formatX2, compareDates, isSelected } from '@/helpers'
 import useCountRests from '@/composables/useCountRests'
 import useComputed from '@/composables/useComputed'
 
@@ -70,11 +70,11 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['monthForward', 'monthBack', 'update'])
-const decreaseMonth = () => {
+const decreaseMonth = (): void => {
   resetMainOptions()
   emit('monthBack', props.currentMonth - 1)
 }
-const increaseMonth = () => {
+const increaseMonth = (): void => {
   resetMainOptions()
   emit('monthForward', props.currentMonth + 1)
 }
@@ -84,7 +84,7 @@ const resetMainOptions = (): void => {
   nextMonthDays.value = []
 }
 
-const currentMonthName = computed(() => {
+const currentMonthName = computed((): string => {
   return MONTHS[props.currentMonth]
 })
 
@@ -95,7 +95,7 @@ const nextMonthDays = ref<number[]>([])
 const getDaysInMonth = computed((): number => {
   return new Date(props.currentYear, props.currentMonth + 1, 0).getDate()
 })
-const getDaysInPreviousMonth = computed(() => {
+const getDaysInPreviousMonth = computed((): number => {
   return new Date(props.currentYear, props.currentMonth, 0).getDate()
 })
 const getDaysInNextMonth = computed((): number => {
@@ -117,16 +117,16 @@ watch(
   },
   { immediate: true }
 )
-const compCurrentYear = computed(() => {
+const compCurrentYear = computed((): number => {
   return props.currentYear
 })
-const compCurrentMonth = computed(() => {
+const compCurrentMonth = computed((): number => {
   return props.currentMonth
 })
-const compCurrentDate = computed(() => {
+const compCurrentDate = computed((): Date => {
   return props.currentDate
 })
-const compCurrentSelected = computed(() => {
+const compCurrentSelected = computed((): Date => {
   return props.selected
 })
 const compareDayOptions = {
@@ -135,7 +135,7 @@ const compareDayOptions = {
   current: compCurrentDate,
   selected: compCurrentSelected
 }
-const currentMonthItems = computed(() => {
+const currentMonthItems = computed((): Item[] => {
   return currentMonthDays.value.map((day) => {
     const weekDay = new Date(props.currentYear, props.currentMonth, day).getDay()
     return {
@@ -162,7 +162,7 @@ const computedOptions = {
 }
 const [previousMonthItems, nextMonthItems] = useComputed(computedOptions)
 
-const items = computed(() => {
+const items = computed((): Item[] => {
   return [...previousMonthItems.value, ...currentMonthItems.value, ...nextMonthItems.value]
 })
 

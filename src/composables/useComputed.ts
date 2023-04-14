@@ -1,5 +1,6 @@
 import { computed, type ComputedRef, type Ref } from 'vue'
 import { formatX2 } from '@/helpers'
+import type { Item } from "@/types";
 
 interface ComputedParams {
   previousMonthDays: Ref<number[]>
@@ -11,7 +12,7 @@ interface ComputedParams {
   compCurrentMonth: ComputedRef<number>
 }
 export default function useComputed(params: ComputedParams) {
-  const previousMonthItems = computed(() => {
+  const previousMonthItems = computed((): Item[] => {
     return params.previousMonthDays.value
       .map((day: number) => {
         const weekDay = new Date(
@@ -32,7 +33,7 @@ export default function useComputed(params: ComputedParams) {
       })
       .slice(params.getDaysInPreviousMonth.value - params.lastPreviousMonthWeekDay.value)
   })
-  const nextMonthItems = computed(() => {
+  const nextMonthItems = computed((): Item[] => {
     return params.nextMonthDays.value
       .map((day: number) => {
         const weekDay = new Date(

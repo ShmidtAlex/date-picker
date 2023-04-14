@@ -35,14 +35,14 @@ const selectedDate = ref<Date>(new Date())
 
 const newCurrentYear = ref<number | null>(null)
 const newCurrentMonth = ref<number | null>(null)
-const currentYear = computed(() => {
+const currentYear = computed((): number => {
   return newCurrentYear.value !== null ? newCurrentYear.value : currentDate.value.getFullYear()
 })
-const currentMonth = computed(() => {
+const currentMonth = computed((): number => {
   return newCurrentMonth.value !== null ? newCurrentMonth.value : currentDate.value.getMonth()
 })
 
-const compSelectedDate = computed(() => {
+const compSelectedDate = computed((): Date => {
   return selectedDate.value ? selectedDate.value : currentDate.value
 })
 
@@ -72,7 +72,7 @@ const monthForward = (month: number): void => {
       newCurrentYear.value !== null ? newCurrentYear.value + 1 : currentDate.value.getFullYear() + 1
   }
 }
-const updateCurrentData = (item: Item) => {
+const updateCurrentData = (item: Item): void => {
   inputValue.value = item.key
   selectedDate.value = item.value
   if (inputRef.value !== null) {
