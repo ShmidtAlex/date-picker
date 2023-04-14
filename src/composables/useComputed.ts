@@ -14,18 +14,19 @@ export default function useComputed(params: ComputedParams) {
   const previousMonthItems = computed(() => {
     return params.previousMonthDays.value
       .map((day: number) => {
+        const weekDay = new Date(
+          params.compCurrentYear.value,
+          params.compCurrentMonth.value,
+          day
+        ).getDay()
         return {
           disabled: true,
-          weekDay: new Date(
-            params.compCurrentYear.value,
-            params.compCurrentMonth.value,
-            day
-          ).getDay(),
+          weekDay: weekDay,
           display: day,
           inRange: false,
-          key: `${params.compCurrentYear}-${formatX2(params.compCurrentMonth.value)}-${formatX2(
-            day
-          )}`,
+          key: `${params.compCurrentYear.value}-${formatX2(
+            params.compCurrentMonth.value
+          )}-${formatX2(day)}`,
           value: new Date(params.compCurrentYear.value, params.compCurrentMonth.value, day)
         }
       })
@@ -34,13 +35,14 @@ export default function useComputed(params: ComputedParams) {
   const nextMonthItems = computed(() => {
     return params.nextMonthDays.value
       .map((day: number) => {
+        const weekDay = new Date(
+          params.compCurrentYear.value,
+          params.compCurrentMonth.value,
+          day
+        ).getDay()
         return {
           disabled: true,
-          weekDay: new Date(
-            params.compCurrentYear.value,
-            params.compCurrentMonth.value + 2,
-            day
-          ).getDay(),
+          weekDay: weekDay,
           display: day,
           inRange: false,
           key: `${params.compCurrentYear.value}-${formatX2(

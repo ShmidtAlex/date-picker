@@ -1,17 +1,21 @@
-import type { ComputedRef } from "vue";
+import type { ComputedRef } from 'vue'
 
 interface Params {
-  day: number;
-  year: ComputedRef<number>;
-  month: ComputedRef<number>;
-  current: Date;
+  day: number
+  year: ComputedRef<number>
+  month: ComputedRef<number>
+  current: ComputedRef<Date>
+  selected: ComputedRef<Date>
 }
-export const compareDay = (params: Params) => {
-  return new Date(params.year.value, params.month.value, params.day).getDate() < params.current.getDate()
-    ? 'disabled'
-    : new Date(params.year.value, params.month.value, params.day).getDate() > params.current.getDate()
-    ? 'enabled'
-    : params.month.value === params.current.getMonth() ? 'selected' : 'enabled'
+export const isSelected = (params: Params) => {
+  return (
+    new Date(params.year.value, params.month.value, params.day).toLocaleString() ===
+    new Date(
+      params.selected.value.getFullYear(),
+      params.selected.value.getMonth(),
+      params.selected.value.getDate()
+    ).toLocaleString()
+  )
 }
 
 export const formatX2 = (num: number) => {
@@ -20,4 +24,15 @@ export const formatX2 = (num: number) => {
 
 export const compareMonth = (month: number, current: Date) => {
   return month > current.getMonth() ? 'more' : month === current.getMonth() ? 'equal' : 'less'
+}
+
+export const compareDates = (params: Params) => {
+  return (
+    new Date(params.year.value, params.month.value, params.day).valueOf() <
+    new Date(
+      params.current.value.getFullYear(),
+      params.current.value.getMonth(),
+      params.current.value.getDate()
+    ).valueOf()
+  )
 }

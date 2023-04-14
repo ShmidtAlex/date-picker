@@ -13,7 +13,7 @@
       v-show="isDatePicker"
       :currentMonth="currentMonth"
       :current-year="currentYear"
-      :selected="currentDate"
+      :selected="compSelectedDate"
       :current-date="currentDate"
       @monthBack="monthBack"
       @monthForward="monthForward"
@@ -31,6 +31,7 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const isDatePicker = ref(false)
 const inputValue = ref('')
 const currentDate = ref<Date>(new Date())
+const selectedDate = ref<Date>(new Date())
 
 const newCurrentYear = ref<number | null>(null)
 const newCurrentMonth = ref<number | null>(null)
@@ -39,6 +40,10 @@ const currentYear = computed(() => {
 })
 const currentMonth = computed(() => {
   return newCurrentMonth.value !== null ? newCurrentMonth.value : currentDate.value.getMonth()
+})
+
+const compSelectedDate = computed(() => {
+  return selectedDate.value ? selectedDate.value : currentDate.value
 })
 
 const showCalendar = (): void => {
@@ -69,6 +74,7 @@ const monthForward = (month: number): void => {
 }
 const updateCurrentData = (item: Item) => {
   inputValue.value = item.key
+  selectedDate.value = item.value
   if (inputRef.value !== null) {
     inputRef.value.blur()
   }

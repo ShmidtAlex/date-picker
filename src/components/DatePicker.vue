@@ -30,6 +30,7 @@
           :class="{
             'in-range': item.inRange,
             'non-in-range': !item.inRange,
+            weekend: item.isWeekend,
             enabled: !item.disabled,
             selected: item.selected
           }"
@@ -46,7 +47,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { Item } from '@/types'
 import { MONTHS, WEEK_DAYS } from '@/constants'
-import { compareDay, formatX2, compareMonth } from '@/helpers'
+import { formatX2, compareMonth, compareDates, isSelected } from '@/helpers'
 import useCountRests from '@/composables/useCountRests'
 import useComputed from '@/composables/useComputed'
 
@@ -122,30 +123,33 @@ const compCurrentYear = computed(() => {
 const compCurrentMonth = computed(() => {
   return props.currentMonth
 })
+const compCurrentDate = computed(() => {
+  return props.currentDate
+})
+const compCurrentSelected = computed(() => {
+  return props.selected
+})
 const compareDayOptions = {
   year: compCurrentYear,
   month: compCurrentMonth,
-  current: props.currentDate
+  current: compCurrentDate,
+  selected: compCurrentSelected
 }
 const currentMonthItems = computed(() => {
   return currentMonthDays.value.map((day) => {
+    const weekDay = new Date(props.currentYear, props.currentMonth, day).getDay()
     return {
-      disabled: compareMonth(props.currentMonth, props.currentDate) === 'equal'
-        ? compareDay({ day: day, ...compareDayOptions }) === 'disabled'
-        : compareMonth(props.currentMonth, props.currentDate) !== 'more',
-      weekDay: new Date(props.currentYear, props.currentMonth, day).getDay(),
+      disabled: compareDates({ day: day, ...compareDayOptions }),
+      weekDay: weekDay,
       display: day,
       inRange: true,
-      selected: compareMonth(props.currentMonth, props.currentDate)
-        ? compareDay({ day: day, ...compareDayOptions }) === 'selected'
-        : false,
+      isWeekend: weekDay === 0 || weekDay === 6,
+      selected: isSelected({ day: day, ...compareDayOptions }),
       key: `${props.currentYear}-${formatX2(props.currentMonth + 1)}-${formatX2(day)}`,
       value: new Date(props.currentYear, props.currentMonth, day)
     }
   })
 })
-// todo: check disableability of previous dates - they shouldn't be available
-
 const [lastPreviousMonthWeekDay, restOfWeekDays] = useCountRests(currentMonthItems)
 const computedOptions = {
   previousMonthDays,
@@ -261,6 +265,9 @@ const updateCurrentData = (item: Item) => {
       .selected {
         color: seagreen;
         border: 1px solid seagreen;
+      }
+      .weekend {
+        font-weight: 700;
       }
     }
   }
