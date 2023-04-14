@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import DatePickerPage from './components/DatePickerPage.vue';
+import DatePickerPage from './components/DatePickerPage.vue'
 </script>
 
 <template>
   <main>
-   <DatePickerPage />
+    <DatePickerPage />
   </main>
 </template>
 
